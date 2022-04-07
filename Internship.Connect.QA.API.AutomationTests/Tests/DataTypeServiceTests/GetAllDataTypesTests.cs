@@ -10,7 +10,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
     public class GetAllDataTypesTests
     {
         [Fact]
-        public async Task Test1()
+        public async Task GetAllDataTypes()
         {
             var dataTypeService = new DataTypeService();
             IRestResponse<IList<DataType>> response = await dataTypeService.GetAllDataTypes();
