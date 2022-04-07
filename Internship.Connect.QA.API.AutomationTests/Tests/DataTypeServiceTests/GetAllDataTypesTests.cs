@@ -10,13 +10,12 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
     public class GetAllDataTypesTests
     {
         [Fact]
-        public async Task GetAllDataTypes()
+        public async Task GetAllDataTypes_ShouldReturn_Ok()
         {
             var dataTypeService = new DataTypeService();
-            IRestResponse<IList<DataType>> response = await dataTypeService.GetAllDataTypes();
-            IList<DataType> allDataTypes = response.Data;
-
-            Assert.Equal(200, (int) response.StatusCode);
+            IRestResponse<IList<DataType>> getAllDataTypesResponse = await dataTypeService.GetAllDataTypes();
+            
+            Assert.Equal(200, (int) getAllDataTypesResponse.StatusCode);
         }
     }
 }

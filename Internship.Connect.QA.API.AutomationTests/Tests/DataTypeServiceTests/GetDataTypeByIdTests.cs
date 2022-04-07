@@ -15,8 +15,8 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
         public async Task GetDataTypeById_ValidDataTypeId_ShouldReturn_Ok()
         {
             var dataTypeService = new DataTypeService();
-            IRestResponse<IList<DataType>> getAllDataTypesresponse = await dataTypeService.GetAllDataTypes();
-            Guid dataType = getAllDataTypesresponse.Data.Select(d => d.Id).First();
+            IRestResponse<IList<DataType>> getAllDataTypesResponse = await dataTypeService.GetAllDataTypes();
+            Guid dataType = getAllDataTypesResponse.Data.Select(d => d.Id).First();
 
             var response = await dataTypeService.GetDataTypeById(dataType);
 
