@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Internship.Connect.QA.API.AutomationTests.Models;
+using Internship.Connect.QA.API.AutomationTests.Models.RequestModels;
 using Internship.Connect.QA.API.AutomationTests.Services;
 using RestSharp;
 using Xunit;
@@ -18,8 +19,14 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests
             var taskService = new TasksService();
             IRestResponse<IList<TaskProcess>> getAllActiveTaskResponse = await taskService.GetAllActiveTasks();
             Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
+
+            var taskStatusRm = new TaskStatusRM()
+            {
+                IsSuccessful = true,
+                LastExecutedDate = DateTime.Now
+            };
             
-            var response = await taskService.UpdateTaskLastExecutionAndStatus(taskProcess);
+            var response = await taskService.UpdateTaskLastExecutionAndStatus(taskProcess, taskStatusRm);
             
             Assert.Equal(200, (int) response.StatusCode);
         }
