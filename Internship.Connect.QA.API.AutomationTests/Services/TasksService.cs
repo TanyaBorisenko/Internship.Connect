@@ -78,7 +78,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Services
             var restRequest = new RestRequest($"/task-processor/tasks/individual/update-task-status/{taskId}", Method.POST);
             restRequest.AddHeader("Authorization", "Bearer a7aa365d-c77f-4a98-b8bc-7627afaac372");
             restRequest.AddParameter("lastExecutedDate", "2022-03-31T14:40:26.445Z",ParameterType.GetOrPost);
-            restRequest.AddParameter("isSuccessful", "true");
+            restRequest.AddParameter("isSuccessful", "true",ParameterType.GetOrPost);
             
             var response = restClient.Get<TaskProcess>(restRequest);
 
