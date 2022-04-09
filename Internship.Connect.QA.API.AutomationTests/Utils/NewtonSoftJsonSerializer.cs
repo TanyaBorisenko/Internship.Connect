@@ -2,14 +2,13 @@
 
 namespace Internship.Connect.QA.API.AutomationTests.Utils
 {
-    public class NewtonSoftJsonSeriliazer
+    public class NewtonSoftJsonSerializer
     {
-        private NewtonSoftJsonSeriliazer()
+        private NewtonSoftJsonSerializer()
         {
-            
         }
-        
-        public static NewtonSoftJsonSeriliazer Default => new NewtonSoftJsonSeriliazer();
+
+        public static NewtonSoftJsonSerializer Default => new NewtonSoftJsonSerializer();
 
         public string Serialize(object obj)
         {

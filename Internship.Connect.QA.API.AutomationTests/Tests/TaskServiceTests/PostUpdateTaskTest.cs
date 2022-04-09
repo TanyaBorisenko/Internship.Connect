@@ -20,7 +20,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests
             IRestResponse<IList<TaskProcess>> getAllActiveTaskResponse = await taskService.GetAllActiveTasks();
             Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
 
-            var taskStatusRm = new TaskStatusRM()
+            var taskStatusRm = new TaskStatusRm()
             {
                 IsSuccessful = true,
                 LastExecutedDate = DateTime.Now

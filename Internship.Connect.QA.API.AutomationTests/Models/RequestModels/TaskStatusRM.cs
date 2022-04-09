@@ -2,7 +2,7 @@
 
 namespace Internship.Connect.QA.API.AutomationTests.Models.RequestModels
 {
-    public class TaskStatusRM
+    public class TaskStatusRm
     {
         public DateTime LastExecutedDate { get; set; }
 

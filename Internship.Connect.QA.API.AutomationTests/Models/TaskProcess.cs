@@ -10,6 +10,5 @@ namespace Internship.Connect.QA.API.AutomationTests.Models
         public Guid TargetSystemId { get; set; }
         public bool IsActive { get; set; }
         public string LastExecutionDate { get; set; }
-        public bool IsSuccessful { get; set; }
     }
 }
