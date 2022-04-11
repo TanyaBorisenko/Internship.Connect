@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Internship.Connect.QA.API.AutomationTests.Models;
+using Internship.Connect.QA.API.AutomationTests.Models.RequestModels;
+using Internship.Connect.QA.API.AutomationTests.Utils;
 using RestSharp;
 
 namespace Internship.Connect.QA.API.AutomationTests.Services
@@ -19,7 +21,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Services
 
             return response;
         }
-        
+
         public async Task<IRestResponse<TaskProcess>> GetTaskById(Guid taskId)
         {
             var restClient = new RestClient("https://connectapi-dev.azurewebsites.net");
@@ -31,7 +33,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Services
 
             return response;
         }
-        
+
         public async Task<IRestResponse<IList<TaskProcess>>> GetAllActiveTaskGroups()
         {
             var restClient = new RestClient("https://connectapi-dev.azurewebsites.net");
@@ -43,7 +45,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Services
 
             return response;
         }
-        
+
         public async Task<IRestResponse<IList<TaskProcess>>> GetAllActiveIndividualTasks()
         {
             var restClient = new RestClient("https://connectapi-dev.azurewebsites.net");
@@ -55,13 +57,55 @@ namespace Internship.Connect.QA.API.AutomationTests.Services
 
             return response;
         }
-        
+
         public async Task<IRestResponse<TaskProcess>> GetATriggerForAnEntity(Guid entityId)
         {
             var restClient = new RestClient("https://connectapi-dev.azurewebsites.net");
             var restRequest = new RestRequest($"/task-processor/tasks/trigger/{entityId}", Method.GET);
             restRequest.AddHeader("Authorization", "Bearer a7aa365d-c77f-4a98-b8bc-7627afaac372");
             restRequest.RequestFormat = DataFormat.Json;
+
+            var response = await restClient.ExecuteAsync<TaskProcess>(restRequest);
+
+            return response;
+        }
+
+        public async Task<IRestResponse<TaskProcess>> UpdateTaskLastExecutionAndStatus(Guid taskId,
+            TaskStatusRm taskStatusRm)
+        {
+            var restClient = new RestClient("https://connectapi-dev.azurewebsites.net");
+            var restRequest = new RestRequest($"/task-processor/tasks/individual/update-task-status/{taskId}",
+                Method.POST);
+            restRequest.AddHeader("Authorization", "Bearer a7aa365d-c77f-4a98-b8bc-7627afaac372");
+            restRequest.AddParameter("application/json; charset=utf-8",
+                NewtonSoftJsonSerializer.Default.Serialize(taskStatusRm), ParameterType.RequestBody);
+
+            var response = await restClient.ExecuteAsync<TaskProcess>(restRequest);
+
+            return response;
+        }
+        
+        public async Task<IRestResponse<TaskProcess>> DisablesWholeTaskGroupByGroupId(Guid groupId)
+        {
+            var restClient = new RestClient("https://connectapi-dev.azurewebsites.net");
+            var restRequest =
+                new RestRequest($"/task-processor/tasks/group/disable-failing-group/{groupId}", Method.POST);
+            restRequest.AddHeader("Authorization", "Bearer a7aa365d-c77f-4a98-b8bc-7627afaac372");
+            restRequest.RequestFormat = DataFormat.Json;
+
+            var response = await restClient.ExecuteAsync<TaskProcess>(restRequest);
+
+            return response;
+        }
+
+        public async Task<IRestResponse<TaskProcess>> UpdateTaskGroupLastTriggerDate(Guid groupId)
+        {
+            var restClient = new RestClient("https://connectapi-dev.azurewebsites.net");
+            var restRequest =
+                new RestRequest(
+                    $"/task-processor/tasks/group/update-last-execution/{groupId}?lastTriggeredDate=05.05.2001",
+                    Method.POST);
+            restRequest.AddHeader("Authorization", "Bearer a7aa365d-c77f-4a98-b8bc-7627afaac372");
 
             var response = await restClient.ExecuteAsync<TaskProcess>(restRequest);
 

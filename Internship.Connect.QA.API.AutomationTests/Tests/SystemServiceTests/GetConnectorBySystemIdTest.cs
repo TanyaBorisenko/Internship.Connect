@@ -7,20 +7,21 @@ using Internship.Connect.QA.API.AutomationTests.Services;
 using RestSharp;
 using Xunit;
 
-namespace Internship.Connect.QA.API.AutomationTests.Tests
+namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
 {
-    public class GetTaskByIdTest
+    public class GetConnectorBySystemIdTest
     {
         [Fact]
-        public async Task GetTaskById_ShouldReturn_Ok()
+        public async Task GetConnectorBySystemId_ShouldReturn_NotFound()
         {
-           var taskService = new TasksService();
+            var systemService = new SystemService();
+            var taskService = new TasksService();
             IRestResponse<IList<TaskProcess>> getAllActiveTaskResponse = await taskService.GetAllActiveTasks();
             Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
 
-            var response = await taskService.GetTaskById(taskProcess);
-            
-            Assert.Equal(200, (int) response.StatusCode);
+            var response = await systemService.GetConnectorBySystemId(taskProcess);
+
+            Assert.Equal(404, (int) response.StatusCode);
         }
     }
 }

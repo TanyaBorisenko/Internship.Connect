@@ -14,7 +14,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
         {
             var dataTypeService = new DataTypeService();
             IRestResponse<IList<DataType>> getAllDataTypesResponse = await dataTypeService.GetAllDataTypes();
-            
+
             Assert.Equal(200, (int) getAllDataTypesResponse.StatusCode);
         }
     }
