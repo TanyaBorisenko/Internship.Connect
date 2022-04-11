@@ -14,7 +14,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests
         [Fact]
         public async Task GetTaskById_ShouldReturn_Ok()
         {
-            var taskService = new TasksService();
+           var taskService = new TasksService();
             IRestResponse<IList<TaskProcess>> getAllActiveTaskResponse = await taskService.GetAllActiveTasks();
             Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
 

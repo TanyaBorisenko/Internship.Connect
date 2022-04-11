@@ -22,6 +22,8 @@ namespace Internship.Connect.QA.API.AutomationTests.Services
 
         public async Task<IRestResponse<DataType>> GetDataTypeById(Guid dataTypeId)
         {
+        public async Task<IRestResponse<DataType>> GetDataTypeById(Guid dataTypeId)
+        {
             var restClient = new RestClient("https://connectapi-dev.azurewebsites.net");
             var restRequest = new RestRequest($"/task-processor/dataTypes/{dataTypeId}", Method.GET);
             restRequest.AddHeader("Authorization", "Bearer a7aa365d-c77f-4a98-b8bc-7627afaac372");
