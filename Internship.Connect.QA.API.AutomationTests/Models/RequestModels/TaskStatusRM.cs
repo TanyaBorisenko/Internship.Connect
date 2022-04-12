@@ -7,5 +7,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Models.RequestModels
         public DateTime LastExecutedDate { get; set; }
 
         public bool IsSuccessful { get; set; }
+
+        public DateTime LastTriggeredDate { get; set; }
     }
 }

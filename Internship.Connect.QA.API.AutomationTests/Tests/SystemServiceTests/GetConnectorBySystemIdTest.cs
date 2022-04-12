@@ -24,13 +24,15 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
         [Fact]
         public async Task GetConnectorBySystemId_ShouldReturn_NotFound()
         {
+            // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
             
-            IRestResponse<IList<TaskProcess>> getAllActiveTaskResponse = await _taskService.GetAllActiveTasks();
-            Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
+            // Act
+            Guid taskProcess = Guid.NewGuid();
 
             var response = await _systemService.GetConnectorBySystemId(taskProcess);
 
+            //Assert
             Assert.Equal(404, (int) response.StatusCode);
         }
     }

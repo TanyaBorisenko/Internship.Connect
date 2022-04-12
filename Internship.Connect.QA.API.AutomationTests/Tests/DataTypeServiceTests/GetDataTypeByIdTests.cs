@@ -22,13 +22,16 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
         [Fact]
         public async Task GetDataTypeById_ValidDataTypeId_ShouldReturn_Ok()
         {
+            // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
             
+            // Act
             IRestResponse<IList<DataType>> getAllDataTypesResponse = await _dataTypeService.GetAllDataTypes();
             Guid dataType = getAllDataTypesResponse.Data.Select(d => d.Id).First();
 
-            var response = await _dataTypeService.GetDataTypeById(dataType);
-
+            var response = await _dataTypeService.GetDataTypeById(dataType); 
+            
+            // Assert
             Assert.Equal(200, (int) response.StatusCode);
         }
     }

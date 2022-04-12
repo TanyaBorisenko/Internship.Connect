@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Internship.Connect.QA.API.AutomationTests.Models;
-using Internship.Connect.QA.API.AutomationTests.Services;
 using Internship.Connect.QA.API.AutomationTests.Services.SystemServices;
 using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
@@ -24,13 +23,16 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
         [Fact]
         public async Task GetAuthTokenBySystemId_ShouldReturn_NotFound()
         {
+            // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
             
+            // Act
             IRestResponse<IList<TaskProcess>> getAllActiveTaskResponse = await _taskService.GetAllActiveTasks();
             Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
 
             var response = await _systemService.GetAuthTokenBySystemId(taskProcess);
 
+            //Assert
             Assert.Equal(404, (int) response.StatusCode);
         }
     }

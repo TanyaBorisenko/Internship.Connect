@@ -20,10 +20,13 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests
         [Fact]
         public async Task GetAllActiveTasks_ShouldReturn_Ok()
         {
+            // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
             
+            //Act
             IRestResponse<IList<TaskProcess>> getAllActiveTaskResponse = await _taskService.GetAllActiveTasks();
 
+            //Assert
             Assert.Equal(200, (int) getAllActiveTaskResponse.StatusCode);
         }
     }

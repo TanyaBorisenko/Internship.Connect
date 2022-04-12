@@ -22,13 +22,16 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests
         [Fact]
         public async Task PostDisablesWholeTaskGroup_ShouldReturn_Ok()
         {
+            // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
             
+            //Act
             IRestResponse<IList<TaskProcess>> getAllActiveTaskGroupsResponse = await _taskService.GetAllActiveTaskGroups();
             Guid taskProcess = getAllActiveTaskGroupsResponse.Data.Select(d => d.Id).First();
 
             var response = await _taskService.DisablesWholeTaskGroupByGroupId(taskProcess);
 
+            //Assert
             Assert.Equal(200, (int) response.StatusCode);
         }
     }

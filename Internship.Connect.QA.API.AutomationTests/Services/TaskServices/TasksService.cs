@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Internship.Connect.QA.API.AutomationTests.Constants;
 using Internship.Connect.QA.API.AutomationTests.Models;
 using Internship.Connect.QA.API.AutomationTests.Models.RequestModels;
+using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using Internship.Connect.QA.API.AutomationTests.Utils;
 using RestSharp;
 
@@ -73,12 +74,14 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.TaskServices
             return response;
         }
 
-        public async Task<IRestResponse<TaskProcess>> UpdateTaskGroupLastTriggerDate(Guid groupId)
+        public async Task<IRestResponse<TaskProcess>> UpdateTaskGroupLastTriggerDate(Guid groupId,TaskStatusRm taskStatusRm)
         {
             var restRequest =
-                new RestRequest(
-                    $"{Endpoints.TaskProcessor}{TaskServiceUri.TaskGroupLastTriggerDate}{groupId}{Parameters.LastTriggeredDate}",
-                    Method.POST);
+                CreateRestRequest(
+                    $"{Endpoints.TaskProcessor}{TaskServiceUri.TaskGroupLastTriggerDate}{groupId}",Method.POST);
+            restRequest.AddParameter($"{Parameters.JsonEncodedUtf}", 
+                NewtonSoftJsonSerializer.Default.Serialize(taskStatusRm), ParameterType.RequestBody);
+            
             var response = await RestClient.ExecuteAsync<TaskProcess>(restRequest);
 
             return response;

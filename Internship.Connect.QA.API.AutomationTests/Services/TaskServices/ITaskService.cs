@@ -16,6 +16,6 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.TaskServices
         Task<IRestResponse<TaskProcess>> GetATriggerForAnEntity(Guid entityId);
         Task<IRestResponse<TaskProcess>> UpdateTaskLastExecutionAndStatus(Guid taskId, TaskStatusRm taskStatusRm);
         Task<IRestResponse<TaskProcess>> DisablesWholeTaskGroupByGroupId(Guid groupId);
-        Task<IRestResponse<TaskProcess>> UpdateTaskGroupLastTriggerDate(Guid groupId);
+        Task<IRestResponse<TaskProcess>> UpdateTaskGroupLastTriggerDate(Guid groupId,TaskStatusRm taskStatusRm);
     }
 }

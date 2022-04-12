@@ -22,13 +22,16 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests
         [Fact]
         public async Task GetTaskById_ShouldReturn_Ok()
         {
+            // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
             
+            //Act
             IRestResponse<IList<TaskProcess>> getAllActiveTaskResponse = await _taskService.GetAllActiveTasks();
             Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
 
             var response = await _taskService.GetTaskById(taskProcess);
             
+            //Assert
             Assert.Equal(200, (int) response.StatusCode);
         }
     }

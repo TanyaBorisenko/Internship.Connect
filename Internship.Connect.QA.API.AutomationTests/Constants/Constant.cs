@@ -38,7 +38,7 @@
 
     public static class Parameters
     {
-        public const string LastTriggeredDate = "?lastTriggeredDate=05.05.2001";
+        public const string LastTriggeredDate = "lastTriggeredDate";
         public const string EncryptedApiKey = "encryptedApiKey";
         public const string JsonEncodedUtf = "application/json; charset=utf-8";
         public const string FileDirectory = "fileDirectory";

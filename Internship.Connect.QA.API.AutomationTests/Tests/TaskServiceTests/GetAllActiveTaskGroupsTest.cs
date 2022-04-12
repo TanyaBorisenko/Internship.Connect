@@ -20,10 +20,13 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests
         [Fact]
         public async Task GetAllActiveTaskGroups_ShouldReturn_Ok()
         {
+            // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
             
+            //Act
             IRestResponse<IList<TaskProcess>> getAllActiveTaskGroupsResponse = await _taskService.GetAllActiveTaskGroups();
 
+            //Assert
             Assert.Equal(200, (int) getAllActiveTaskGroupsResponse.StatusCode);
         }
     }
