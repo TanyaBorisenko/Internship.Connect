@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
 {
-    public class GetAllDataTypesTests : BaseTPTests
+    public class GetAllDataTypesTests : BaseTpTests
     {
         private readonly IDataTypeService _dataTypeService;
         public GetAllDataTypesTests()

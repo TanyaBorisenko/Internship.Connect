@@ -3,6 +3,8 @@
     public class TaskProcessorAuthService : ITaskProcessorAuthService
     {
         private static TaskProcessorAuthService _taskProcessorAuthService = new TaskProcessorAuthService();
+        public string TaskProcessorAuthKey { get; set; }
+
         private TaskProcessorAuthService()
         {
         }
@@ -15,6 +17,7 @@
                 {
                     _taskProcessorAuthService = new TaskProcessorAuthService();
                 }
+
                 return _taskProcessorAuthService;
             }
         }
@@ -23,7 +26,5 @@
         {
             TaskProcessorAuthKey = "a7aa365d-c77f-4a98-b8bc-7627afaac372";
         }
-
-        public string TaskProcessorAuthKey { get; set; }
     }
 }

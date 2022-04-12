@@ -2,11 +2,11 @@
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.Base
 {
-    public abstract class BaseTPTests
+    public abstract class BaseTpTests
     {
         protected readonly ITaskProcessorAuthService TaskProcessorAuthService;
         
-        protected BaseTPTests()
+        protected BaseTpTests()
         {
             TaskProcessorAuthService = Services.TaskProcessorAuthService.Instance;
         }
