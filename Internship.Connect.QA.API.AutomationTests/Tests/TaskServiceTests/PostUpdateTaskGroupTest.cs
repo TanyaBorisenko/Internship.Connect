@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Internship.Connect.QA.API.AutomationTests.Models;
 using Internship.Connect.QA.API.AutomationTests.Models.RequestModels;
+using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using RestSharp;
@@ -27,7 +27,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests
             TaskProcessorAuthService.GetApiAuthKey();
 
             //Act
-            IRestResponse<IList<TaskProcess>> getAllActiveTaskGroupsResponse =
+            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskGroupsResponse =
                 await _taskService.GetAllActiveTaskGroups();
             Guid taskProcess = getAllActiveTaskGroupsResponse.Data.Select(d => d.Id).First();
 
@@ -40,6 +40,20 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests
 
             //Assert
             Assert.Equal(200, (int) response.StatusCode);
+        }
+
+        [Fact]
+        public async Task PostUpdateTaskGroup_ShouldReturn_Unauthorized()
+        {
+            // Arrange
+            TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
+
+            // Act
+            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskGroupsResponse =
+                await _taskService.GetAllActiveTaskGroups();
+
+            // Assert
+            Assert.Equal(401, (int) getAllActiveTaskGroupsResponse.StatusCode);
         }
     }
 }

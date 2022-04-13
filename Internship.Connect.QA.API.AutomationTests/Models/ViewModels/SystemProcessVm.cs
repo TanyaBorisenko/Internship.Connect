@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Internship.Connect.QA.API.AutomationTests.Models
+namespace Internship.Connect.QA.API.AutomationTests.Models.ViewModels
 {
-    public class SystemProcess
+    public class SystemProcessVm
     {
         public Guid Id { get; set; }
 

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Internship.Connect.QA.API.AutomationTests.Models
+namespace Internship.Connect.QA.API.AutomationTests.Models.ViewModels
 {
-    public class TaskProcess
+    public class TaskProcessVm
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

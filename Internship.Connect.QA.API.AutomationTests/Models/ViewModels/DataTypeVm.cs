@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Internship.Connect.QA.API.AutomationTests.Models
+namespace Internship.Connect.QA.API.AutomationTests.Models.ViewModels
 {
-    public class DataType
+    public class DataTypeVm
     {
         public Guid Id { get; set; }
 
