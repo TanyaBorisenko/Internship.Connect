@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Internship.Connect.QA.API.AutomationTests.Models;
-using Internship.Connect.QA.API.AutomationTests.Services;
 using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using RestSharp;
