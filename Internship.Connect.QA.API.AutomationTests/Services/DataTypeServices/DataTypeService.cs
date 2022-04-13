@@ -19,15 +19,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices
 
         public async Task<IRestResponse<DataType>> GetDataTypeById(Guid dataTypeId)
         {
-            var restRequest = new RestRequest($"/task-processor/dataTypes/{dataTypeId}", Method.GET);
-            restRequest.AddHeader("Authorization", "Bearer a7aa365d-c77f-4a98-b8bc-7627afaac372");
-            restRequest.RequestFormat = DataFormat.Json;
-
+            var restRequest = CreateRestRequest($"{Endpoints.TaskProcessor}{DataTypesUri.DataTypeById}{dataTypeId}", Method.GET);
             var response = await RestClient.ExecuteAsync<DataType>(restRequest);
 
             return response;
         }
-        
-        public void HelloWorld(){}
     }
 }

@@ -5,9 +5,30 @@
         public const string TaskProcessor = "/task-processor";
     }
 
+    public static class TaskServiceUri
+    {
+        public const string AllActiveTasks = "/tasks/active";
+        public const string TaskById = "/tasks/";
+        public const string AllActiveTaskGroups = "/tasks/groups";
+        public const string AllActiveIndividualTasks = "/tasks/individual";
+        public const string TriggerForAnEntity = "/tasks/trigger/";
+        public const string TaskLastExecutionAndStatus = "/tasks/individual/update-task-status/";
+        public const string WholeTaskGroupByGroupId = "/tasks/group/disable-failing-group/";
+        public const string TaskGroupLastTriggerDate = "/tasks/group/update-last-execution/";
+
+    }
+
+    public static class SystemServiceUri
+    {
+        public const string SystemById = "/systems/";
+        public const string AuthTokenBySystemId = "/authTokens/";
+        public const string ConnectorBySystemId = "/connectors/";
+    }
+
     public static class DataTypesUri
     {
         public const string AllDataTypes = "/dataTypes/all";
+        public const string DataTypeById = "/dataTypes/";
     }
 
     public static class Headers

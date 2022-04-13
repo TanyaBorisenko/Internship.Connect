@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Internship.Connect.QA.API.AutomationTests.Models;
-using Internship.Connect.QA.API.AutomationTests.Services;
 using Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using RestSharp;
@@ -9,7 +8,7 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
 {
-    public class GetAllDataTypesTests : BaseTPTests
+    public class GetAllDataTypesTests : BaseTpTests
     {
         private readonly IDataTypeService _dataTypeService;
         public GetAllDataTypesTests()
