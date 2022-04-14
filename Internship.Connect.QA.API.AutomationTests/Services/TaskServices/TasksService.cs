@@ -77,14 +77,14 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.TaskServices
             return response;
         }
 
-        public async Task<IRestResponse<TaskProcessVm>> UpdateTaskGroupLastTriggerDate(Guid groupId,
-            TaskStatusRm taskStatusRm)
+        public async Task<IRestResponse> UpdateTaskGroupLastTriggerDate(Guid groupId, DateTime? lastTriggeredDate)
         {
-            var restRequest =
-                CreateRestRequest(
-                    $"{Endpoints.TaskProcessor}{TaskServiceUri.TaskGroupLastTriggerDate}{groupId}", Method.POST,
-                    taskStatusRm);
-            var response = await RestClient.ExecuteAsync<TaskProcessVm>(restRequest);
+            var restRequest = CreateRestRequest(
+                    $"{Endpoints.TaskProcessor}{TaskServiceUri.TaskGroupLastTriggerDate}{groupId}", Method.POST);
+            if (lastTriggeredDate != null)
+                restRequest.AddQueryParameter(Parameters.LastTriggeredDate, lastTriggeredDate.Value.ToString());
+            
+            var response = await RestClient.ExecuteAsync(restRequest);
 
             return response;
         }
