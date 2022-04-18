@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Internship.Connect.QA.API.AutomationTests.Models;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices;
@@ -30,7 +32,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
             IRestResponse<IList<DataTypeVm>> getAllDataTypesResponse = await _dataTypeService.GetAllDataTypes();
             Guid dataType = getAllDataTypesResponse.Data.Select(d => d.Id).First();
 
-            var response = await _dataTypeService.GetDataTypeById(dataType); 
+            var response = await _dataTypeService.GetDataTypeById<DataTypeVm>(dataType); 
             
             // Assert
             Assert.Equal(200, (int) response.StatusCode);
@@ -41,12 +43,18 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
+
+            var expectedError = new OriginalErrorVm()
+            {
+                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+            };
             
             // Act
-            IRestResponse<IList<DataTypeVm>> getAllDataTypesResponse = await _dataTypeService.GetAllDataTypes();
+            var response = await _dataTypeService.GetDataTypeById<OriginalErrorVm>(Guid.NewGuid());
 
             // Assert
-            Assert.Equal(401, (int) getAllDataTypesResponse.StatusCode);
+            response.Data.Should().BeEquivalentTo(expectedError);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
 }

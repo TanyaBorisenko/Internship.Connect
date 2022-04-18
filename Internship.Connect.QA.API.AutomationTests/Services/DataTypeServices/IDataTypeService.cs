@@ -11,6 +11,6 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices
     {
         Task<IRestResponse<IList<DataTypeVm>>> GetAllDataTypes();
 
-        Task<IRestResponse<DataTypeVm>> GetDataTypeById(Guid dataTypeId);
+        Task<IRestResponse<T>> GetDataTypeById<T>(Guid dataTypeId);
     }
 }
