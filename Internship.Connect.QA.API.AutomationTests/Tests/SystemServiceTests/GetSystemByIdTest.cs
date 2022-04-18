@@ -29,5 +29,20 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
             //Assert
             Assert.Equal(404, (int) response.StatusCode);
         }
+
+        [Fact]
+        public async Task GetSystemById_Unauthorized_ShouldReturn_Unauthorized()
+        {
+            // Arrange
+            TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
+
+            // Act
+            Guid taskProcess = Guid.NewGuid();
+
+            var response = await _systemService.GetSystemById(taskProcess);
+
+            // Assert
+            Assert.Equal(401, (int) response.StatusCode);
+        }
     }
 }

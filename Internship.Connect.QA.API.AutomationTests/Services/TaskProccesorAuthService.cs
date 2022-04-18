@@ -1,4 +1,6 @@
-﻿namespace Internship.Connect.QA.API.AutomationTests.Services
+﻿using Internship.Connect.QA.API.AutomationTests.Constants;
+
+namespace Internship.Connect.QA.API.AutomationTests.Services
 {
     public class TaskProcessorAuthService : ITaskProcessorAuthService
     {
@@ -24,7 +26,7 @@
 
         public void GetApiAuthKey()
         {
-            TaskProcessorAuthKey = "a7aa365d-c77f-4a98-b8bc-7627afaac372";
+            TaskProcessorAuthKey = Endpoints.TaskProcessorAuthKey;
         }
     }
 }

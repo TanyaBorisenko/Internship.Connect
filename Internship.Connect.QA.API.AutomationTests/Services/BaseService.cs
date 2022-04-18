@@ -12,7 +12,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Services
         protected BaseService()
         {
             _taskProcessorAuthService = TaskProcessorAuthService.Instance;
-            RestClient = new RestClient("https://connectapi-dev.azurewebsites.net");
+            RestClient = new RestClient(Endpoints.ConnectUrl);
         }
 
         protected IRestRequest CreateRestRequest(string uri, Method method, object payload = null)

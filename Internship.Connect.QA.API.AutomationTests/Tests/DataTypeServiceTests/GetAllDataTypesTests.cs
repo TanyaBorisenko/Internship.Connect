@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Internship.Connect.QA.API.AutomationTests.Models;
+using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using RestSharp;
@@ -23,7 +24,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
             TaskProcessorAuthService.GetApiAuthKey();
 
             // Act
-            IRestResponse<IList<DataType>> getAllDataTypesResponse = await _dataTypeService.GetAllDataTypes();
+            IRestResponse<IList<DataTypeVm>> getAllDataTypesResponse = await _dataTypeService.GetAllDataTypes();
 
             // Assert
             Assert.Equal(200, (int) getAllDataTypesResponse.StatusCode);
@@ -36,7 +37,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
             
             // Act
-            IRestResponse<IList<DataType>> getAllDataTypesResponse = await _dataTypeService.GetAllDataTypes();
+            IRestResponse<IList<DataTypeVm>> getAllDataTypesResponse = await _dataTypeService.GetAllDataTypes();
 
             // Assert
             Assert.Equal(401, (int) getAllDataTypesResponse.StatusCode);

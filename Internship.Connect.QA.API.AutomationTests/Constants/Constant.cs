@@ -1,7 +1,11 @@
-﻿namespace Internship.Connect.QA.API.AutomationTests.Constants
+﻿using Internship.Connect.QA.API.AutomationTests.Utils;
+
+namespace Internship.Connect.QA.API.AutomationTests.Constants
 {
     public static class Endpoints
     {
+        public static readonly string ConnectUrl = Configurator.GetConfig()["ConnectUrl"];
+        public static readonly string TaskProcessorAuthKey = Configurator.GetConfig()["TaskProcessorAuthKey"];
         public const string TaskProcessor = "/task-processor";
     }
 
