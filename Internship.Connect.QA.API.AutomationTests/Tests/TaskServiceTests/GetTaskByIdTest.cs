@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using RestSharp;
 using Xunit;
 
-namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
+namespace Internship.Connect.QA.API.AutomationTests.Tests
 {
     public class GetTaskByIdTest : BaseTpTests
     {
@@ -26,10 +28,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             TaskProcessorAuthService.GetApiAuthKey();
 
             //Act
-            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse = await _taskService.GetAllActiveTasks();
+            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse = await _taskService.GetAllActiveTasks<IList<TaskProcessVm>>();
             Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
 
-            var response = await _taskService.GetTaskById(taskProcess);
+            var response = await _taskService.GetTaskById<TaskProcessVm>(taskProcess);
 
             //Assert
             Assert.Equal(200, (int) response.StatusCode);
@@ -40,13 +42,18 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
-
+        
+            var expectedError = new OriginalErrorVm()
+            {
+                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+            };
+            
             // Act
-            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse =
-                await _taskService.GetAllActiveTasks();
-
+            var response = await _taskService.GetTaskById<OriginalErrorVm>(Guid.NewGuid());
+        
             // Assert
-            Assert.Equal(401, (int) getAllActiveTaskResponse.StatusCode);
+            response.Data.Should().BeEquivalentTo(expectedError);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
 }

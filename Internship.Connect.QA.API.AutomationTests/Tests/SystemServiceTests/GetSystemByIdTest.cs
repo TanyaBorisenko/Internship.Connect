@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.SystemServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using Xunit;
@@ -24,7 +27,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
             // Act
             Guid taskProcess = Guid.NewGuid();
 
-            var response = await _systemService.GetSystemById(taskProcess);
+            var response = await _systemService.GetSystemById<SystemProcessVm>(taskProcess);
 
             //Assert
             Assert.Equal(404, (int) response.StatusCode);
@@ -35,14 +38,18 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
-
+        
+            var expectedError = new OriginalErrorVm()
+            {
+                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+            };
+            
             // Act
-            Guid taskProcess = Guid.NewGuid();
-
-            var response = await _systemService.GetSystemById(taskProcess);
-
+            var response = await _systemService.GetSystemById<OriginalErrorVm>(Guid.NewGuid());
+        
             // Assert
-            Assert.Equal(401, (int) response.StatusCode);
+            response.Data.Should().BeEquivalentTo(expectedError);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
 }

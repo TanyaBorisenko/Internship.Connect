@@ -10,10 +10,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices
 {
     public class DataTypeService : BaseService, IDataTypeService
     {
-        public async Task<IRestResponse<IList<DataTypeVm>>> GetAllDataTypes()
+        public async Task<IRestResponse<T>> GetAllDataTypes<T>()
         {
             var restRequest = CreateRestRequest($"{Endpoints.TaskProcessor}{DataTypesUri.AllDataTypes}", Method.GET);
-            var response = await RestClient.ExecuteAsync<IList<DataTypeVm>>(restRequest);
+            var response = await RestClient.ExecuteAsync<T>(restRequest);
 
             return response;
         }
