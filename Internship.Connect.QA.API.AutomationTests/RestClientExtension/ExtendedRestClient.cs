@@ -11,7 +11,8 @@ namespace Internship.Connect.QA.API.AutomationTests.RestClientExtension
     { 
         private ILogger<ExtendedRestClient> Logger => LoggerBuilder.GetLogger<ExtendedRestClient>();
 
-       public ExtendedRestClient(Uri uri) : base(uri)
+        public ExtendedRestClient(Uri uri) : base(uri)
+
         {
         }
 
