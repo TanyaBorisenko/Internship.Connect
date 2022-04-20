@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.SystemServices;
-using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
-using RestSharp;
 using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
@@ -16,12 +12,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
     public class GetAuthTokenBySystemIdTest : BaseTpTests
     {
         private readonly ISystemService _systemService;
-        private readonly ITaskService _taskService;
 
         public GetAuthTokenBySystemIdTest()
         {
             _systemService = new SystemService();
-            _taskService = new TasksService();
         }
 
         [Fact]
@@ -44,15 +38,15 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
-        
+
             var expectedError = new OriginalErrorVm()
             {
                 Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
-            
+
             // Act
             var response = await _systemService.GetAuthTokenBySystemId<OriginalErrorVm>(Guid.NewGuid());
-        
+
             // Assert
             response.Data.Should().BeEquivalentTo(expectedError);
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
