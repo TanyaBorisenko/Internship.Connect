@@ -30,7 +30,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
             var response = await _systemService.GetConnectorBySystemId<SystemProcessVm>(taskProcess);
 
             //Assert
-            Assert.Equal(404, (int) response.StatusCode);
+            Assert.Equal(401, (int) response.StatusCode);
         }
 
         [Fact]
