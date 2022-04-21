@@ -11,7 +11,7 @@ using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using RestSharp;
 using Xunit;
 
-namespace Internship.Connect.QA.API.AutomationTests.Tests
+namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
 {
     public class PostUpdateTaskTest : BaseTpTests
     {

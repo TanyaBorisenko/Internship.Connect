@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
+using FluentAssertions.Execution;
+using Internship.Connect.QA.API.AutomationTests.Constants;
+using Internship.Connect.QA.API.AutomationTests.Entities.Factories;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
@@ -26,14 +31,16 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
             TaskProcessorAuthService.GetApiAuthKey();
 
             // Act
-            IRestResponse<IList<DataTypeVm>> getAllDataTypesResponse =
-                await _dataTypeService.GetAllDataTypes<IList<DataTypeVm>>();
-            Guid dataType = getAllDataTypesResponse.Data.Select(d => d.Id).First();
+            var dataType = DataTypeFactory.GetDataType(DataType.Boolean, DataTypeIds.Boolean);
 
-            var response = await _dataTypeService.GetDataTypeById<IList<DataTypeVm>>(dataType);
+            var response = await _dataTypeService.GetDataTypeById<DataTypeVm>(dataType.Id);
 
             // Assert
-            Assert.Equal(200, (int) response.StatusCode);
+            using (new AssertionScope())
+            {
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
+                response.Data.Should().BeEquivalentTo(dataType);
+            }
         }
 
         [Fact]
@@ -43,8 +50,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
 
             // Act
-            IRestResponse<IList<DataTypeVm>> getAllDataTypesResponse =
-                await _dataTypeService.GetAllDataTypes<IList<DataTypeVm>>();
+            var response = await _dataTypeService.GetDataTypeById<DataTypeVm>(dataType.Id);
 
             // Assert
             Assert.Equal(401, (int) getAllDataTypesResponse.StatusCode);
