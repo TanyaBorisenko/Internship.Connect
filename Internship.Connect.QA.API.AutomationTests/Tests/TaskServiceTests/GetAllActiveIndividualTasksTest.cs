@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
@@ -30,7 +31,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
                 await _taskService.GetAllActiveIndividualTasks<IList<TaskProcessVm>>();
 
             //Assert
-            Assert.Equal(200, (int) getAllActiveIndividualTasksResponse.StatusCode);
+            using (new AssertionScope())
+            {
+                getAllActiveIndividualTasksResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            }
         }
 
         [Fact]
@@ -38,15 +42,15 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
-        
+
             var expectedError = new OriginalErrorVm()
             {
                 Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
-            
+
             // Act
             var response = await _taskService.GetAllActiveIndividualTasks<OriginalErrorVm>();
-        
+
             // Assert
             response.Data.Should().BeEquivalentTo(expectedError);
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);

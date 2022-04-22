@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using Internship.Connect.QA.API.AutomationTests.Utils;
 
 namespace Internship.Connect.QA.API.AutomationTests.Constants

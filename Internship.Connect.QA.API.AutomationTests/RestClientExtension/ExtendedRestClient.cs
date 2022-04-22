@@ -8,7 +8,7 @@ using RestSharp;
 namespace Internship.Connect.QA.API.AutomationTests.RestClientExtension
 {
     public class ExtendedRestClient : RestClient, IExtendedRestClient
-    { 
+    {
         private ILogger<ExtendedRestClient> Logger => LoggerBuilder.GetLogger<ExtendedRestClient>();
 
         public ExtendedRestClient(Uri uri) : base(uri)
@@ -46,7 +46,7 @@ namespace Internship.Connect.QA.API.AutomationTests.RestClientExtension
             {
                 Logger.LogError($"Error retrieving response. Error message is {response.ErrorException.Message}");
             }
-            
+
             Logger.LogInformation($"Request finished with status code: {response.StatusCode}");
             if (!string.IsNullOrEmpty(response.Content))
             {

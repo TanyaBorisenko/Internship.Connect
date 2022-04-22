@@ -2,10 +2,11 @@
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Execution;
+using Internship.Connect.QA.API.AutomationTests.Entities.Factories;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
-using RestSharp;
 using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
@@ -26,11 +27,16 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
             TaskProcessorAuthService.GetApiAuthKey();
 
             // Act
-            IRestResponse<IList<DataTypeVm>> getAllDataTypesResponse =
-                await _dataTypeService.GetAllDataTypes<IList<DataTypeVm>>();
+            IList<DataTypeVm> allDataTypes = DataTypeFactory.AllDataTypes();
+            var response = await _dataTypeService.GetAllDataTypes<DataTypeVm>();
 
             // Assert
-            Assert.Equal(200, (int) getAllDataTypesResponse.StatusCode);
+            using (new AssertionScope())
+            {
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
+                allDataTypes.Should().NotBeEmpty();
+                allDataTypes.Should().AllBeAssignableTo<DataTypeVm>();
+            }
         }
 
         [Fact]

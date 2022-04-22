@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.SystemServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
@@ -30,7 +31,11 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
             var response = await _systemService.GetAuthTokenBySystemId<TaskProcessVm>(taskProcess);
 
             //Assert
-            Assert.Equal(404, (int) response.StatusCode);
+            using (new AssertionScope())
+            {
+                response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+                response.Data.Should().BeEquivalentTo(taskProcess);
+            }
         }
 
         [Fact]

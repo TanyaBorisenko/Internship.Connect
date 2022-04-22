@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Internship.Connect.QA.API.AutomationTests.Models.RequestModels;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
@@ -29,7 +30,8 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             TaskProcessorAuthService.GetApiAuthKey();
 
             //Act
-            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse = await _taskService.GetAllActiveTasks<IList<TaskProcessVm>>();
+            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse =
+                await _taskService.GetAllActiveTasks<IList<TaskProcessVm>>();
             Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
 
             var taskStatusRm = new TaskStatusRm()
@@ -38,10 +40,14 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
                 LastExecutedDate = DateTime.Now
             };
 
-            var response = await _taskService.UpdateTaskLastExecutionAndStatus<TaskProcessVm>(taskProcess, taskStatusRm);
+            var response =
+                await _taskService.UpdateTaskLastExecutionAndStatus<TaskProcessVm>(taskProcess, taskStatusRm);
 
             //Assert
-            Assert.Equal(200, (int) response.StatusCode);
+            using (new AssertionScope())
+            {
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
+            }
         }
 
         [Fact]
@@ -55,10 +61,11 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             {
                 Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
-            
+
             // Act
-            var response = await _taskService.UpdateTaskLastExecutionAndStatus<OriginalErrorVm>(Guid.NewGuid(),taskStatusRm);
-        
+            var response =
+                await _taskService.UpdateTaskLastExecutionAndStatus<OriginalErrorVm>(Guid.NewGuid(), taskStatusRm);
+
             // Assert
             response.Data.Should().BeEquivalentTo(expectedError);
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
