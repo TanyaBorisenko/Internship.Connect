@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Internship.Connect.QA.API.AutomationTests.Models;
+using FluentAssertions.Execution;
+using Internship.Connect.QA.API.AutomationTests.Constants;
+using Internship.Connect.QA.API.AutomationTests.Entities.Factories;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
-using RestSharp;
 using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
@@ -27,17 +26,20 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
         {
             // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
-            
-            // Act
-            IRestResponse<IList<DataTypeVm>> getAllDataTypesResponse = await _dataTypeService.GetAllDataTypes();
-            Guid dataType = getAllDataTypesResponse.Data.Select(d => d.Id).First();
 
-            var response = await _dataTypeService.GetDataTypeById<DataTypeVm>(dataType); 
-            
+            // Act
+            var dataType = DataTypeFactory.GetDataType(DataType.Boolean, DataTypeIds.Boolean);
+
+            var response = await _dataTypeService.GetDataTypeById<DataTypeVm>(dataType.Id);
+
             // Assert
-            Assert.Equal(200, (int) response.StatusCode);
+            using (new AssertionScope())
+            {
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
+                response.Data.Should().BeEquivalentTo(dataType);
+            }
         }
-        
+
         [Fact]
         public async Task GetDataTypeById_Unauthorized_ShouldReturn_Unauthorized()
         {
@@ -48,7 +50,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
             {
                 Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
-            
+
             // Act
             var response = await _dataTypeService.GetDataTypeById<OriginalErrorVm>(Guid.NewGuid());
 

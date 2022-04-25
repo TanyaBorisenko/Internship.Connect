@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Internship.Connect.QA.API.AutomationTests.Utils
 {
@@ -12,7 +13,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Utils
                 config.AddDebug();
                 config.SetMinimumLevel(LogLevel.Debug);
             });
-
+        
         public static ILogger GetLogger(Type category)
         {
             return LoggerFactory.CreateLogger(category);

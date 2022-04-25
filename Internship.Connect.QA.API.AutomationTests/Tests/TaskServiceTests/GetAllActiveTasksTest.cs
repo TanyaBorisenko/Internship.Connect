@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
+using FluentAssertions.Execution;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
@@ -24,10 +27,14 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             TaskProcessorAuthService.GetApiAuthKey();
 
             //Act
-            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse = await _taskService.GetAllActiveTasks();
+            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse =
+                await _taskService.GetAllActiveTasks<IList<TaskProcessVm>>();
 
             //Assert
-            Assert.Equal(200, (int) getAllActiveTaskResponse.StatusCode);
+            using (new AssertionScope())
+            {
+                getAllActiveTaskResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+            }
         }
 
         [Fact]
@@ -36,12 +43,17 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
 
+            var expectedError = new OriginalErrorVm()
+            {
+                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+            };
+
             // Act
-            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse =
-                await _taskService.GetAllActiveTasks();
+            var response = await _taskService.GetAllActiveTaskGroups<OriginalErrorVm>();
 
             // Assert
-            Assert.Equal(401, (int) getAllActiveTaskResponse.StatusCode);
+            response.Data.Should().BeEquivalentTo(expectedError);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
     }
 }
