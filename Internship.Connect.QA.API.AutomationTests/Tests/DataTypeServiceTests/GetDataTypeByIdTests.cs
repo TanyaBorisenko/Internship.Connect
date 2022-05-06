@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
 {
-    public class GetDataTypeByIdTests : BaseTpTests
+    public class GetDataTypeByIdTests : BaseTests
     {
         private readonly IDataTypeService _dataTypeService;
 
@@ -30,7 +30,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
             // Act
             var dataType = DataTypeFactory.GetDataType(DataType.Boolean, DataTypeIds.Boolean);
 
-            var response = await _dataTypeService.GetDataTypeById<DataTypeVm>(dataType.Id);
+            var response = await _dataTypeService.GetDataTypeByIdTp<DataTypeVm>(dataType.Id);
 
             // Assert
             using (new AssertionScope())
@@ -48,15 +48,18 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
 
             var expectedError = new OriginalErrorVm()
             {
-                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+                Errors = new OriginalErrorVm.ErrorVm() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
 
             // Act
-            var response = await _dataTypeService.GetDataTypeById<OriginalErrorVm>(Guid.NewGuid());
+            var response = await _dataTypeService.GetDataTypeByIdTp<OriginalErrorVm>(Guid.NewGuid());
 
             // Assert
-            response.Data.Should().BeEquivalentTo(expectedError);
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            using (new AssertionScope())
+            {
+                response.Data.Should().BeEquivalentTo(expectedError);
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
         }
     }
 }

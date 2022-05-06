@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
 {
-    public class PostUpdateTaskGroupTest : BaseTpTests
+    public class PostUpdateTaskGroupTest : BaseTests
     {
         private readonly ITaskService _taskService;
 
@@ -36,10 +36,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             var response = await _taskService.UpdateTaskGroupLastTriggerDate(taskProcess, DateTime.Now);
 
             //Assert
-            using (new AssertionScope())
-            {
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-            }
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -50,7 +47,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
 
             var expectedError = new OriginalErrorVm()
             {
-                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+                Errors = new OriginalErrorVm.ErrorVm() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
 
             // Act
@@ -58,8 +55,11 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
                 await _taskService.UpdateTaskGroupLastTriggerDate<OriginalErrorVm>(Guid.NewGuid(), DateTime.Now);
 
             // Assert
-            response.Data.Should().BeEquivalentTo(expectedError);
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            using (new AssertionScope())
+            {
+                response.Data.Should().BeEquivalentTo(expectedError);
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
         }
     }
 }

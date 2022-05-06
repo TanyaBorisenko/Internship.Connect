@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
 {
-    public class GetConnectorBySystemIdTest : BaseTpTests
+    public class GetConnectorBySystemIdTest : BaseTests
     {
         private readonly ISystemService _systemService;
 
@@ -46,15 +46,18 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
 
             var expectedError = new OriginalErrorVm()
             {
-                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+                Errors = new OriginalErrorVm.ErrorVm() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
 
             // Act
             var response = await _systemService.GetConnectorBySystemId<OriginalErrorVm>(Guid.NewGuid());
 
             // Assert
-            response.Data.Should().BeEquivalentTo(expectedError);
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            using (new AssertionScope())
+            {
+                response.Data.Should().BeEquivalentTo(expectedError);
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
         }
     }
 }

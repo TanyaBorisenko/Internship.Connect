@@ -6,8 +6,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices
 {
     public interface IDataTypeService
     {
-        Task<IRestResponse<T>> GetAllDataTypes<T>();
+        Task<IRestResponse<T>> GetAllDataTypesTp<T>();
 
-        Task<IRestResponse<T>> GetDataTypeById<T>(Guid dataTypeId);
+        Task<IRestResponse<T>> GetDataTypeByIdTp<T>(Guid dataTypeId);
+        
+        Task<IRestResponse<T>> GetAllDataTypesWeb<T>();
     }
 }
