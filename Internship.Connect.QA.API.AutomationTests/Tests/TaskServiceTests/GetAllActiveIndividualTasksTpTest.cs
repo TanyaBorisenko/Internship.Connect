@@ -1,45 +1,41 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
-using Internship.Connect.QA.API.AutomationTests.Services.SystemServices;
+using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
+using RestSharp;
 using Xunit;
 
-namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
+namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
 {
-    public class GetAuthTokenBySystemIdTest : BaseTests
+    public class GetAllActiveIndividualTasksTpTest : BaseTests
     {
-        private readonly ISystemService _systemService;
+        private readonly ITaskService _taskService;
 
-        public GetAuthTokenBySystemIdTest()
+        public GetAllActiveIndividualTasksTpTest()
         {
-            _systemService = new SystemService();
+            _taskService = new TasksService();
         }
 
         [Fact]
-        public async Task GetAuthTokenBySystemId_ShouldReturn_NotFound()
+        public async Task GetAllActiveIndividualTasks_ShouldReturn_Ok()
         {
             // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
 
             // Act
-            Guid taskProcess = Guid.NewGuid();
-
-            var response = await _systemService.GetAuthTokenBySystemId<TaskProcessVm>(taskProcess);
+            IRestResponse<IList<TaskProcessVm>> getAllActiveIndividualTasksResponse =
+                await _taskService.GetAllActiveIndividualTasks<IList<TaskProcessVm>>();
 
             //Assert
-            using (new AssertionScope())
-            {
-                response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-                response.Data.Should().BeEquivalentTo(taskProcess);
-            }
+            getAllActiveIndividualTasksResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task GetAuthTokenBySystemId_Unauthorized_ShouldReturn_Unauthorized()
+        public async Task GetAllActiveIndividualTasks_Unauthorized_ShouldReturn_Unauthorized()
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
@@ -50,7 +46,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
             };
 
             // Act
-            var response = await _systemService.GetAuthTokenBySystemId<OriginalErrorVm>(Guid.NewGuid());
+            var response = await _taskService.GetAllActiveIndividualTasks<OriginalErrorVm>();
 
             // Assert
             using (new AssertionScope())

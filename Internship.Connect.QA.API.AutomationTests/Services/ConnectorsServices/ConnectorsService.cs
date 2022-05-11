@@ -15,5 +15,14 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.ConnectorsServices
 
             return response;
         }
+
+        public async Task<IRestResponse> GetAllConnectorsWeb()
+        {
+            var restRequest = CreateRestRequest($"{Endpoints.WebApiService}{WebApiUri.AllConnectors}", Method.GET,
+                ConnectApi.Web);
+            var response = await RestClient.ExecuteAsync(restRequest);
+
+            return response;
+        }
     }
 }

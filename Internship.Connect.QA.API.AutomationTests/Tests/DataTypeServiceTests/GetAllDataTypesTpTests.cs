@@ -1,45 +1,46 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Internship.Connect.QA.API.AutomationTests.Entities.Factories;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
-using Internship.Connect.QA.API.AutomationTests.Services.SystemServices;
+using Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using Xunit;
 
-namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
+namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
 {
-    public class GetConnectorBySystemIdTest : BaseTests
+    public class GetAllDataTypesTpTests : BaseTests
     {
-        private readonly ISystemService _systemService;
+        private readonly IDataTypeService _dataTypeService;
 
-        public GetConnectorBySystemIdTest()
+        public GetAllDataTypesTpTests()
         {
-            _systemService = new SystemService();
+            _dataTypeService = new DataTypeService();
         }
 
         [Fact]
-        public async Task GetConnectorBySystemId_ShouldReturn_NotFound()
+        public async Task GetAllDataTypesTp_ShouldReturn_Ok()
         {
             // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
 
             // Act
-            Guid taskProcess = Guid.NewGuid();
+            IList<DataTypeVm> allDataTypes = DataTypeFactory.AllDataTypes();
+            var response = await _dataTypeService.GetAllDataTypesTp<DataTypeVm>();
 
-            var response = await _systemService.GetConnectorBySystemId<SystemProcessVm>(taskProcess);
-
-            //Assert
+            // Assert
             using (new AssertionScope())
             {
-                response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-                response.Data.Should().BeEquivalentTo(taskProcess);
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
+                allDataTypes.Should().NotBeEmpty();
+                allDataTypes.Should().AllBeAssignableTo<DataTypeVm>();
             }
         }
 
         [Fact]
-        public async Task GetConnectorBySystemId_Unauthorized_ShouldReturn_Unauthorized()
+        public async Task GetAllDataTypes_Unauthorized_ShouldReturn_Unauthorized()
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
@@ -50,7 +51,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
             };
 
             // Act
-            var response = await _systemService.GetConnectorBySystemId<OriginalErrorVm>(Guid.NewGuid());
+            var response = await _dataTypeService.GetAllDataTypesTp<OriginalErrorVm>();
 
             // Assert
             using (new AssertionScope())

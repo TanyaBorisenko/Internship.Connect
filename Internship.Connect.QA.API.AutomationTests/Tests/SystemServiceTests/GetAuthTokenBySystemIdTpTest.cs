@@ -5,42 +5,47 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Internship.Connect.QA.API.AutomationTests.Models.RequestModels;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
+using Internship.Connect.QA.API.AutomationTests.Services.ConnectorsServices;
+using Internship.Connect.QA.API.AutomationTests.Services.SystemServices;
 using Internship.Connect.QA.API.AutomationTests.Services.TaskServices;
 using Internship.Connect.QA.API.AutomationTests.Tests.Base;
 using RestSharp;
 using Xunit;
 
-namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
+namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
 {
-    public class GetATriggerForAnEntityTest : BaseTests
+    public class GetAuthTokenBySystemIdTpTest : BaseTests
     {
+        private readonly ISystemService _systemService;
         private readonly ITaskService _taskService;
 
-        public GetATriggerForAnEntityTest()
+        public GetAuthTokenBySystemIdTpTest()
         {
+            _systemService = new SystemService();
             _taskService = new TasksService();
         }
 
         [Fact]
-        public async Task GetATriggerForAnEntity_ShouldReturn_Ok()
+        public async Task GetAuthTokenBySystemId_ShouldReturn_Ok()
         {
             // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
 
-            //Act
-            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskGroupsResponse =
-                await _taskService.GetAllActiveTaskGroups<IList<TaskProcessVm>>();
-            Guid taskProcess = getAllActiveTaskGroupsResponse.Data.Select(d => d.Id).First();
+            // Act
+            IRestResponse<IList<TaskProcessVm>> allActiveTasks =
+                await _taskService.GetAllActiveTasks<IList<TaskProcessVm>>();
+            Guid systemId = allActiveTasks.Data.Select(s => s.SourceSystemId).First();
 
-            var response = await _taskService.GetATriggerForAnEntity<IList<TaskProcessVm>>(taskProcess);
+            var response = await _systemService.GetAuthTokenBySystemId<TaskProcessVm>(systemId);
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task GetATriggerForAnEntity_Unauthorized_ShouldReturn_Unauthorized()
+        public async Task GetAuthTokenBySystemId_Unauthorized_ShouldReturn_Unauthorized()
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
@@ -51,7 +56,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             };
 
             // Act
-            var response = await _taskService.GetATriggerForAnEntity<OriginalErrorVm>(Guid.NewGuid());
+            var response = await _systemService.GetAuthTokenBySystemId<OriginalErrorVm>(Guid.NewGuid());
 
             // Assert
             using (new AssertionScope())

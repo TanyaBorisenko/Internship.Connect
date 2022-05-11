@@ -13,11 +13,11 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
 {
-    public class PostDisablesWholeTaskGroupTest : BaseTests
+    public class PostDisablesWholeTaskGroupTpTest : BaseTests
     {
         private readonly ITaskService _taskService;
 
-        public PostDisablesWholeTaskGroupTest()
+        public PostDisablesWholeTaskGroupTpTest()
         {
             _taskService = new TasksService();
         }

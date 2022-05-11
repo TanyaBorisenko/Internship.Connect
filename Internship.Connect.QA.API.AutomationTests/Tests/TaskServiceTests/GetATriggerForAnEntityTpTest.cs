@@ -13,34 +13,34 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
 {
-    public class GetTaskByIdTest : BaseTests
+    public class GetATriggerForAnEntityTpTest : BaseTests
     {
         private readonly ITaskService _taskService;
 
-        public GetTaskByIdTest()
+        public GetATriggerForAnEntityTpTest()
         {
             _taskService = new TasksService();
         }
 
         [Fact]
-        public async Task GetTaskById_ShouldReturn_Ok()
+        public async Task GetATriggerForAnEntity_ShouldReturn_Ok()
         {
             // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
 
             //Act
-            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse =
-                await _taskService.GetAllActiveTasks<IList<TaskProcessVm>>();
-            Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.Id).First();
+            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskGroupsResponse =
+                await _taskService.GetAllActiveTaskGroups<IList<TaskProcessVm>>();
+            Guid taskProcess = getAllActiveTaskGroupsResponse.Data.Select(d => d.Id).First();
 
-            var response = await _taskService.GetTaskById<TaskProcessVm>(taskProcess);
+            var response = await _taskService.GetATriggerForAnEntity<IList<TaskProcessVm>>(taskProcess);
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task GetTaskById_Unauthorized_ShouldReturn_Unauthorized()
+        public async Task GetATriggerForAnEntity_Unauthorized_ShouldReturn_Unauthorized()
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
@@ -51,7 +51,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             };
 
             // Act
-            var response = await _taskService.GetTaskById<OriginalErrorVm>(Guid.NewGuid());
+            var response = await _taskService.GetATriggerForAnEntity<OriginalErrorVm>(Guid.NewGuid());
 
             // Assert
             using (new AssertionScope())

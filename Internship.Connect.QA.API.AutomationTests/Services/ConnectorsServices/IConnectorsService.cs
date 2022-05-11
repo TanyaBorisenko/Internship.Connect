@@ -6,5 +6,6 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.ConnectorsServices
     public interface IConnectorsService
     {
         Task<IRestResponse<T>> GetAllConnectorsWeb<T>();
+        Task<IRestResponse> GetAllConnectorsWeb();
     }
 }

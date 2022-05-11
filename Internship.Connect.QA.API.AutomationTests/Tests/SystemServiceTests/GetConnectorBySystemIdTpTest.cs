@@ -15,22 +15,23 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
 {
-    public class WebSystemsTests : BaseTests
+    public class GetConnectorBySystemIdTpTest : BaseTests
     {
         private readonly ISystemService _systemService;
         private readonly IConnectorsService _connectorsService;
 
-        public WebSystemsTests()
+        public GetConnectorBySystemIdTpTest()
         {
             _systemService = new SystemService();
             _connectorsService = new ConnectorsService();
         }
 
         [Fact]
-        public async Task WebSystemTest_ShouldReturn_Ok()
+        public async Task GetConnectorBySystemId_ShouldReturn_Ok()
         {
             // Arrange
             WebApiService.GetWebApiAuthKey();
+            TaskProcessorAuthService.GetApiAuthKey();
 
             // Act
             IRestResponse<IList<ConnectorsVm>> allConnectors =
@@ -48,34 +49,37 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
 
             IRestResponse<IList<SystemProcessVm>> allSystems =
                 await _systemService.GetAllSystemsWeb<IList<SystemProcessVm>>();
-
             Guid systemId = allSystems.Data.Select(s => s.Id).First();
-            Guid connectorUpdateId = allSystems.Data.Select(s => s.ConnectorId).First();
 
-            var systemRmUpdate = new SystemRm()
-            {
-                Name = "newName",
-                Url = "98765",
-                ConnectorId = connectorUpdateId
-            };
-
-            var responseUpdate = await _systemService.UpdateSystemWeb<SystemProcessVm>(systemId, systemRmUpdate);
-
-            IRestResponse<IList<SystemProcessVm>> allUpdateSystems =
-                await _systemService.GetAllSystemsWeb<IList<SystemProcessVm>>();
-            Guid deleteId = allUpdateSystems.Data.Select(s => s.Id).First();
-
-            var responseDelete = await _systemService.DeleteSystemWeb<SystemProcessVm>(deleteId);
+            var response = await _systemService.GetConnectorBySystemId<SystemProcessVm>(systemId);
 
             //Assert
             using (new AssertionScope())
             {
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
                 responseAdd.StatusCode.Should().Be(HttpStatusCode.OK);
-                responseAdd.Data.Should().BeEquivalentTo(systemRm);
-                allSystems.StatusCode.Should().Be(HttpStatusCode.OK);
-                allSystems.Data.Should().ContainEquivalentOf(systemRm);
-                responseUpdate.StatusCode.Should().Be(HttpStatusCode.OK);
-                responseDelete.StatusCode.Should().Be(HttpStatusCode.OK);
+            }
+        }
+
+        [Fact]
+        public async Task GetConnectorBySystemId_Unauthorized_ShouldReturn_Unauthorized()
+        {
+            // Arrange
+            TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
+
+            var expectedError = new OriginalErrorVm()
+            {
+                Errors = new OriginalErrorVm.ErrorVm() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+            };
+
+            // Act
+            var response = await _systemService.GetConnectorBySystemId<OriginalErrorVm>(Guid.NewGuid());
+
+            // Assert
+            using (new AssertionScope())
+            {
+                response.Data.Should().BeEquivalentTo(expectedError);
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
             }
         }
     }

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Execution;
+using Internship.Connect.QA.API.AutomationTests.Constants;
 using Internship.Connect.QA.API.AutomationTests.Entities.Factories;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices;
@@ -11,36 +12,36 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
 {
-    public class GetAllDataTypesTests : BaseTests
+    public class GetDataTypeByIdTpTests : BaseTests
     {
         private readonly IDataTypeService _dataTypeService;
 
-        public GetAllDataTypesTests()
+        public GetDataTypeByIdTpTests()
         {
             _dataTypeService = new DataTypeService();
         }
 
         [Fact]
-        public async Task GetAllDataTypesTp_ShouldReturn_Ok()
+        public async Task GetDataTypeById_ValidDataTypeId_ShouldReturn_Ok()
         {
             // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
 
             // Act
-            IList<DataTypeVm> allDataTypes = DataTypeFactory.AllDataTypes();
-            var response = await _dataTypeService.GetAllDataTypesTp<DataTypeVm>();
+            var dataType = DataTypeFactory.GetDataType(DataType.Boolean, DataTypeIds.Boolean);
+
+            var response = await _dataTypeService.GetDataTypeByIdTp<DataTypeVm>(dataType.Id);
 
             // Assert
             using (new AssertionScope())
             {
                 response.StatusCode.Should().Be(HttpStatusCode.OK);
-                allDataTypes.Should().NotBeEmpty();
-                allDataTypes.Should().AllBeAssignableTo<DataTypeVm>();
+                response.Data.Should().BeEquivalentTo(dataType);
             }
         }
 
         [Fact]
-        public async Task GetAllDataTypes_Unauthorized_ShouldReturn_Unauthorized()
+        public async Task GetDataTypeById_Unauthorized_ShouldReturn_Unauthorized()
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
@@ -51,32 +52,13 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
             };
 
             // Act
-            var response = await _dataTypeService.GetAllDataTypesTp<OriginalErrorVm>();
+            var response = await _dataTypeService.GetDataTypeByIdTp<OriginalErrorVm>(Guid.NewGuid());
 
             // Assert
             using (new AssertionScope())
             {
                 response.Data.Should().BeEquivalentTo(expectedError);
                 response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-            }
-        }
-
-        [Fact]
-        public async Task GetAllDataTypesWeb_ShouldReturn_Ok()
-        {
-            // Arrange
-            WebApiService.GetWebApiAuthKey();
-
-            // Act
-            IList<DataTypeVm> allDataTypes = DataTypeFactory.AllDataTypes();
-            var response = await _dataTypeService.GetAllDataTypesWeb<DataTypeVm>();
-
-            // Assert
-            using (new AssertionScope())
-            {
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-                allDataTypes.Should().NotBeEmpty();
-                allDataTypes.Should().AllBeAssignableTo<DataTypeVm>();
             }
         }
     }
