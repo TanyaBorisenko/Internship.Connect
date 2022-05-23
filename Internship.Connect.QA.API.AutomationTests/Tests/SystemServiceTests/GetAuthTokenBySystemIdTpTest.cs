@@ -21,10 +21,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
         private readonly ISystemService _systemService;
         private readonly ITaskService _taskService;
 
-        public GetAuthTokenBySystemIdTpTest()
+        public GetAuthTokenBySystemIdTpTest(ISystemService systemService, ITaskService taskService)
         {
-            _systemService = new SystemService();
-            _taskService = new TasksService();
+            _systemService = systemService;
+            _taskService = taskService;
         }
 
         [Fact]

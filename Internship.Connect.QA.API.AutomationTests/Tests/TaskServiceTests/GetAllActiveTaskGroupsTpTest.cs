@@ -15,9 +15,9 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
     {
         private readonly ITaskService _taskService;
 
-        public GetAllActiveTaskGroupsTpTest()
+        public GetAllActiveTaskGroupsTpTest(ITaskService taskService)
         {
-            _taskService = new TasksService();
+            _taskService = taskService;
         }
 
         [Fact]

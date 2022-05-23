@@ -13,10 +13,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.Base
         private readonly ITaskProcessorAuthService _taskProcessorAuthService;
         private readonly IWebApiService _webApiService;
 
-        protected BaseService()
+        protected BaseService(IXunitLogger xunitLogger)
         {
             _taskProcessorAuthService = TaskProcessorAuthService.Instance;
-            RestClient = new ExtendedRestClient(new Uri(Endpoints.ConnectUrl));
+            RestClient = new ExtendedRestClient(new Uri(Endpoints.ConnectUrl), xunitLogger);
             _webApiService = WebApiService.Instance;
         }
 
@@ -27,24 +27,24 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.Base
             string token = null;
             switch (connectApi)
             {
-               case ConnectApi.Web:
+                case ConnectApi.Web:
                     token = _webApiService.WebApiAuthKey;
-                   break;
-               case ConnectApi.TaskProcessor:
-                   token = _taskProcessorAuthService.TaskProcessorAuthKey;
-                   break;
+                    break;
+                case ConnectApi.TaskProcessor:
+                    token = _taskProcessorAuthService.TaskProcessorAuthKey;
+                    break;
             }
 
             if (token is null)
             {
                 throw new ArgumentException("Token is not identified");
             }
-            
+
             restRequest.AddHeader(Headers.Authorization, $"Bearer {token}");
 
             if (payload != null)
             {
-                restRequest.AddParameter(Parameters.JsonEncodedUtf, NewtonSoftJsonSerializer.Default.Serialize(payload),
+                restRequest.AddParameter(Parameters.JsonEncodedUtf, NewtonSoftJsonSerializer.Serialize(payload),
                     ParameterType.RequestBody);
             }
 

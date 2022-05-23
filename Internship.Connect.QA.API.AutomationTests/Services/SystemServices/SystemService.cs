@@ -3,12 +3,17 @@ using System.Threading.Tasks;
 using Internship.Connect.QA.API.AutomationTests.Constants;
 using Internship.Connect.QA.API.AutomationTests.Models.RequestModels;
 using Internship.Connect.QA.API.AutomationTests.Services.Base;
+using Internship.Connect.QA.API.AutomationTests.Utils;
 using RestSharp;
 
 namespace Internship.Connect.QA.API.AutomationTests.Services.SystemServices
 {
     public class SystemService : BaseService, ISystemService
     {
+        public SystemService(IXunitLogger xunitLogger) : base(xunitLogger)
+        {
+        }
+
         public async Task<IRestResponse<T>> GetSystemById<T>(Guid systemId)
         {
             var restRequest = CreateRestRequest($"{Endpoints.TaskProcessor}{SystemServiceUri.SystemById}{systemId}",

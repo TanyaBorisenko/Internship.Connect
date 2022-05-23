@@ -2,12 +2,17 @@ using System;
 using System.Threading.Tasks;
 using Internship.Connect.QA.API.AutomationTests.Constants;
 using Internship.Connect.QA.API.AutomationTests.Services.Base;
+using Internship.Connect.QA.API.AutomationTests.Utils;
 using RestSharp;
 
 namespace Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices
 {
     public class DataTypeService : BaseService, IDataTypeService
     {
+        public DataTypeService(IXunitLogger xunitLogger) : base(xunitLogger)
+        {
+        }
+
         public async Task<IRestResponse<T>> GetAllDataTypesTp<T>()
         {
             var restRequest = CreateRestRequest($"{Endpoints.TaskProcessor}{DataTypesUri.AllDataTypes}", Method.GET,

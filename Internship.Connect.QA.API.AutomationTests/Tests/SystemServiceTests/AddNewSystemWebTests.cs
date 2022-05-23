@@ -20,10 +20,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
         private readonly ISystemService _systemService;
         private readonly IConnectorsService _connectorsService;
 
-        public AddNewSystemWebTests()
+        public AddNewSystemWebTests(ISystemService systemService, IConnectorsService connectorsService)
         {
-            _systemService = new SystemService();
-            _connectorsService = new ConnectorsService();
+            _systemService = systemService;
+            _connectorsService = connectorsService;
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
                 responseAdd.Data.Should().BeEquivalentTo(systemRm);
             }
         }
-        
+
         [Fact]
         public async Task AddNewSystemWeb_Unauthorized_ShouldReturn_Unauthorized()
         {
@@ -66,7 +66,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
-        
+
         [Fact]
         public async Task AddNewSystemWeb_BadRequest_ShouldReturn_BadRequest()
         {

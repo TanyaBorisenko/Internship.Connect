@@ -19,7 +19,6 @@ namespace Internship.Connect.QA.API.AutomationTests.Entities.Factories
                 GetDataType(DataType.Single, DataTypeIds.Single),
                 GetDataType(DataType.String, DataTypeIds.String),
                 GetDataType(DataType.DateTime, DataTypeIds.DateTime),
-                
             };
             return list;
         }

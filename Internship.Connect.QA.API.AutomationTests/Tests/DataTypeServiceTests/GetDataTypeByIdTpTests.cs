@@ -16,9 +16,9 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
     {
         private readonly IDataTypeService _dataTypeService;
 
-        public GetDataTypeByIdTpTests()
+        public GetDataTypeByIdTpTests(IDataTypeService dataTypeService)
         {
-            _dataTypeService = new DataTypeService();
+            _dataTypeService = dataTypeService;
         }
 
         [Fact]

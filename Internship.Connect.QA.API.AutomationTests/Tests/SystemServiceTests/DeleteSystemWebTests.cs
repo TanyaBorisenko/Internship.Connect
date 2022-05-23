@@ -20,10 +20,10 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.SystemServiceTests
         private readonly ISystemService _systemService;
         private readonly IConnectorsService _connectorsService;
 
-        public DeleteSystemWebTests()
+        public DeleteSystemWebTests(ISystemService systemService, IConnectorsService connectorsService)
         {
-            _systemService = new SystemService();
-            _connectorsService = new ConnectorsService();
+            _systemService = systemService;
+            _connectorsService = connectorsService;
         }
 
         [Fact]
