@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Internship.Connect.QA.API.AutomationTests.Entities.Factories;
 using Internship.Connect.QA.API.AutomationTests.Models.ViewModels;
 using Internship.Connect.QA.API.AutomationTests.Services.ConnectorsServices;
@@ -30,9 +31,12 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.ConnectorsServicesTest
             var response = await _connectorsService.GetAllConnectorsWeb<ConnectorsVm>();
 
             //Assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
-            allConnectors.Should().NotBeEmpty();
-            allConnectors.Should().AllBeAssignableTo<ConnectorsVm>();
+            using (new AssertionScope())
+            {
+                response.StatusCode.Should().Be(HttpStatusCode.OK);
+                allConnectors.Should().NotBeEmpty();
+                allConnectors.Should().AllBeAssignableTo<ConnectorsVm>();
+            }
         }
         
         [Fact]

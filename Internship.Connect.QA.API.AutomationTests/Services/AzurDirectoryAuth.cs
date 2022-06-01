@@ -21,7 +21,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Services
                 WebDriverWait driverWait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
                 IWebElement emailButton = driverWait.Until(d => d.FindElement(By.Id("i0116")));
                 emailButton.Click();
-                emailButton.SendKeys("aznak@itventuresandbox.onmicrosoft.com");
+                emailButton.SendKeys("");
 
                 var nextButton = driverWait.Until(d => d.FindElement(By.Id("idSIButton9")));
                 nextButton.Click();
@@ -29,7 +29,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Services
                 Thread.Sleep(10000);
                 var passwordButton = _driver.FindElement(By.Name("passwd"));
                 passwordButton.Click();
-                passwordButton.SendKeys("Zuvo1991");
+                passwordButton.SendKeys("");
 
                 var submitButton = driverWait.Until(d => d.FindElement(By.Id("idSIButton9")));
                 submitButton.Click();

@@ -17,8 +17,6 @@ namespace Internship.Connect.QA.API.AutomationTests.RestClientExtension
         private readonly IXunitLogger _xunitLogger;
 
         public ExtendedRestClient(Uri uri, IXunitLogger xunitLogger) : base(uri)
-        public ExtendedRestClient(Uri uri) : base(uri)
-
         {
             _xunitLogger = xunitLogger;
             _logger = xunitLogger.OutputHelper.ToLogger<ExtendedRestClient>();
