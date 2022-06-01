@@ -10,6 +10,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices
     public class DataTypeService : BaseService, IDataTypeService
     {
         public DataTypeService(IXunitLogger xunitLogger) : base(xunitLogger)
+        public async Task<IRestResponse<T>> GetAllDataTypes<T>()
         {
         }
 
@@ -17,6 +18,8 @@ namespace Internship.Connect.QA.API.AutomationTests.Services.DataTypeServices
         {
             var restRequest = CreateRestRequest($"{Endpoints.TaskProcessor}{DataTypesUri.AllDataTypes}", Method.GET,
                 ConnectApi.TaskProcessor);
+            var response = await RestClient.ExecuteAsync<T>(restRequest);
+            var restRequest = CreateRestRequest($"{Endpoints.TaskProcessor}{DataTypesUri.AllDataTypes}", Method.GET);
             var response = await RestClient.ExecuteAsync<T>(restRequest);
 
             return response;
