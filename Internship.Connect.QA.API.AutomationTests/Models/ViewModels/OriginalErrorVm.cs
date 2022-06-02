@@ -2,9 +2,9 @@
 {
     public class OriginalErrorVm
     {
-        public ErrorVM Errors { get; set; }
+        public ErrorVm Errors { get; set; }
 
-        public class ErrorVM
+        public class ErrorVm
         {
             public string AuthorizationHeader { get; set; }
         }

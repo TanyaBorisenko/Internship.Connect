@@ -13,17 +13,17 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
 {
-    public class PostDisablesWholeTaskGroupTest : BaseTpTests
+    public class PostUpdateTaskGroupTpTest : BaseTests
     {
         private readonly ITaskService _taskService;
 
-        public PostDisablesWholeTaskGroupTest()
+        public PostUpdateTaskGroupTpTest(ITaskService taskService)
         {
-            _taskService = new TasksService();
+            _taskService = taskService;
         }
 
         [Fact]
-        public async Task PostDisablesWholeTaskGroup_ShouldReturn_Ok()
+        public async Task PostUpdateTaskGroup_ShouldReturn_Ok()
         {
             // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
@@ -31,34 +31,35 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             //Act
             IRestResponse<IList<TaskProcessVm>> getAllActiveTaskGroupsResponse =
                 await _taskService.GetAllActiveTaskGroups<IList<TaskProcessVm>>();
-            Guid taskProcess = getAllActiveTaskGroupsResponse.Data.Select(d => d.Id).First();
+            Guid taskProcess = getAllActiveTaskGroupsResponse.Data.Select(d => d.Id).FirstOrDefault();
 
-            var response = await _taskService.DisablesWholeTaskGroupByGroupId<TaskProcessVm>(taskProcess);
+            var response = await _taskService.UpdateTaskGroupLastTriggerDate(taskProcess, DateTime.Now);
 
             //Assert
-            using (new AssertionScope())
-            {
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-            }
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         [Fact]
-        public async Task PostDisablesWholeTaskGroup_ShouldReturn_Unauthorized()
+        public async Task PostUpdateTaskGroup_ShouldReturn_Unauthorized()
         {
             // Arrange
             TaskProcessorAuthService.TaskProcessorAuthKey = string.Empty;
 
             var expectedError = new OriginalErrorVm()
             {
-                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+                Errors = new OriginalErrorVm.ErrorVm() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
 
             // Act
-            var response = await _taskService.DisablesWholeTaskGroupByGroupId<OriginalErrorVm>(Guid.NewGuid());
+            var response =
+                await _taskService.UpdateTaskGroupLastTriggerDate<OriginalErrorVm>(Guid.NewGuid(), DateTime.Now);
 
             // Assert
-            response.Data.Should().BeEquivalentTo(expectedError);
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            using (new AssertionScope())
+            {
+                response.Data.Should().BeEquivalentTo(expectedError);
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
         }
     }
 }

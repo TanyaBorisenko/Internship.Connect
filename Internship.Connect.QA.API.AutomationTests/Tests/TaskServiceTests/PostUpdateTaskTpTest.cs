@@ -14,13 +14,13 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
 {
-    public class PostUpdateTaskTest : BaseTpTests
+    public class PostUpdateTaskTpTest : BaseTests
     {
         private readonly ITaskService _taskService;
 
-        public PostUpdateTaskTest()
+        public PostUpdateTaskTpTest(ITaskService taskService)
         {
-            _taskService = new TasksService();
+            _taskService = taskService;
         }
 
         [Fact]
@@ -44,10 +44,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
                 await _taskService.UpdateTaskLastExecutionAndStatus<TaskProcessVm>(taskProcess, taskStatusRm);
 
             //Assert
-            using (new AssertionScope())
-            {
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
-            }
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -59,7 +56,7 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
             var taskStatusRm = new TaskStatusRm();
             var expectedError = new OriginalErrorVm()
             {
-                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+                Errors = new OriginalErrorVm.ErrorVm() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
 
             // Act
@@ -67,8 +64,35 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.TaskServiceTests
                 await _taskService.UpdateTaskLastExecutionAndStatus<OriginalErrorVm>(Guid.NewGuid(), taskStatusRm);
 
             // Assert
-            response.Data.Should().BeEquivalentTo(expectedError);
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            using (new AssertionScope())
+            {
+                response.Data.Should().BeEquivalentTo(expectedError);
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
+        }
+        
+        [Fact]
+        public async Task PostUpdateTask_ShouldReturn_NotFound()
+        {
+            // Arrange
+            TaskProcessorAuthService.GetApiAuthKey();
+            
+            // Act
+            IRestResponse<IList<TaskProcessVm>> getAllActiveTaskResponse =
+                await _taskService.GetAllActiveTasks<IList<TaskProcessVm>>();
+            Guid taskProcess = getAllActiveTaskResponse.Data.Select(d => d.TargetSystemId).First();
+
+            var taskStatusRm = new TaskStatusRm()
+            {
+                IsSuccessful = true,
+                LastExecutedDate = DateTime.Now
+            };
+
+            var response =
+                await _taskService.UpdateTaskLastExecutionAndStatus<TaskProcessVm>(taskProcess, taskStatusRm);
+            
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }
 }

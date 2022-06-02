@@ -11,24 +11,24 @@ using Xunit;
 
 namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
 {
-    public class GetAllDataTypesTests : BaseTpTests
+    public class GetAllDataTypesTpTests : BaseTests
     {
         private readonly IDataTypeService _dataTypeService;
 
-        public GetAllDataTypesTests()
+        public GetAllDataTypesTpTests(IDataTypeService dataTypeService)
         {
-            _dataTypeService = new DataTypeService();
+            _dataTypeService = dataTypeService;
         }
 
         [Fact]
-        public async Task GetAllDataTypes_ShouldReturn_Ok()
+        public async Task GetAllDataTypesTp_ShouldReturn_Ok()
         {
             // Arrange
             TaskProcessorAuthService.GetApiAuthKey();
 
             // Act
             IList<DataTypeVm> allDataTypes = DataTypeFactory.AllDataTypes();
-            var response = await _dataTypeService.GetAllDataTypes<DataTypeVm>();
+            var response = await _dataTypeService.GetAllDataTypesTp<DataTypeVm>();
 
             // Assert
             using (new AssertionScope())
@@ -47,15 +47,18 @@ namespace Internship.Connect.QA.API.AutomationTests.Tests.DataTypeServiceTests
 
             var expectedError = new OriginalErrorVm()
             {
-                Errors = new OriginalErrorVm.ErrorVM() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
+                Errors = new OriginalErrorVm.ErrorVm() {AuthorizationHeader = "[\"Authorization data is not valid\"]"}
             };
 
             // Act
-            var response = await _dataTypeService.GetAllDataTypes<OriginalErrorVm>();
+            var response = await _dataTypeService.GetAllDataTypesTp<OriginalErrorVm>();
 
             // Assert
-            response.Data.Should().BeEquivalentTo(expectedError);
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            using (new AssertionScope())
+            {
+                response.Data.Should().BeEquivalentTo(expectedError);
+                response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+            }
         }
     }
 }
